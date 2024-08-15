@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_in_store_app_version_checker/flutter_in_store_app_version_checker.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../configs/app_constants.dart';
 import '../../configs/app_sizes.dart';
 import '../../configs/app_urls.dart';
@@ -18,15 +18,34 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen> {
   String? token, email, password;
+  AppUpdateInfo? _updateInfo;
+
+  Future<AppUpdateInfo?> checkForUpdate() async {
+    try {
+      AppUpdateInfo info = await InAppUpdate.checkForUpdate();
+      setState(() {
+        _updateInfo = info;
+      });
+      if(_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable){
+        appUpdateAlert(context);
+      }
+    } catch (e) {
+      debugPrint('$e');
+    }
+    return _updateInfo;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkForUpdate();
+  }
 
   Future<void> getData() async {
     await LocalDB.getLoginInfo().then((myData) {
       if (myData == null) {
         Future.delayed(const Duration(milliseconds: 5), () {
-          // AppRoutes.pushAndRemoveUntil(
-          //   context,
-          //   const RootScreen(),
-          // );
+          // Navigate to your next screen
         });
         return;
       }
@@ -35,87 +54,49 @@ class SplashScreenState extends State<SplashScreen> {
       email = myData[0];
       password = myData[1];
       token = myData[2];
-      // context.read<AuthBloc>().add(DoLoginEvent(email: '$email', password: '$password'));
-      Future.delayed(const Duration(milliseconds: 5), () {
-        // AppRoutes.pushAndRemoveUntil(
-        //   context,
-        //   const RootScreen(),
-        // );
-      });
+      // Trigger login and navigate to home screen
     });
 
     setState(() {});
   }
 
-  Future<void> appUpdateAlert(context) async{
-
+  Future<void> appUpdateAlert(context) async {
     final alert = AlertDialog.adaptive(
       title: const Text("Update App?"),
       content: const Text("A new version of ${AppConstants.appName} is available!"),
       actions: [
         TextButton(
-            onPressed: (){
+            onPressed: () {
               getData();
             },
-            child: const Text("Later")
-        ),
+            child: const Text("Later")),
         TextButton(
-            onPressed: (){
+            onPressed: () {
               Navigator.pop(context);
-              if(Platform.isIOS){
-                launchAppStore(AppUrls.appStoreLink);
-              } else {
-                launchAppStore(AppUrls.playStoreLink);
-              }
+              InAppUpdate.performImmediateUpdate();
             },
-            child: const Text("Update Now")
-        ),
+            child: const Text("Update Now")),
       ],
     );
-
-
-    final checker = InStoreAppVersionChecker();
-    final canUpdate = await checker.checkUpdate().then((value) => value.canUpdate);
-
-    if(canUpdate){
-      showAdaptiveDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-    } else{
-      getData();
-    }
-
+    showAdaptiveDialog(context: context,
+      builder: (context) {
+        return alert;
+      },
+    );
   }
 
   Future<void> launchAppStore(String appStoreLink) async {
-    debugPrint(appStoreLink);
     var uri = Uri.parse(appStoreLink);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      throw 'Could not launch appStoreLink';
+      throw 'Could not launch $appStoreLink';
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    appUpdateAlert(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      // body: Center(
-      //   child: Image.asset(
-      //     "assets/images/app_icon.png",
-      //     height: 100,
-      //     width: 100,
-      //   ),
-      // ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(AppSizes.bodyPadding),
         child: Text.rich(
