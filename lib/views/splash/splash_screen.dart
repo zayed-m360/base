@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../configs/app_constants.dart';
 import '../../configs/app_sizes.dart';
@@ -23,10 +22,11 @@ class SplashScreenState extends State<SplashScreen> {
   Future<AppUpdateInfo?> checkForUpdate() async {
     try {
       AppUpdateInfo info = await InAppUpdate.checkForUpdate();
+      if (!mounted) return null; // Ensure the widget is still mounted
       setState(() {
         _updateInfo = info;
       });
-      if(_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable){
+      if (_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
         appUpdateAlert(context);
       }
     } catch (e) {
@@ -35,14 +35,9 @@ class SplashScreenState extends State<SplashScreen> {
     return _updateInfo;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    checkForUpdate();
-  }
-
   Future<void> getData() async {
     await LocalDB.getLoginInfo().then((myData) {
+      if (!mounted) return; // Ensure the widget is still mounted
       if (myData == null) {
         Future.delayed(const Duration(milliseconds: 5), () {
           // Navigate to your next screen
@@ -57,7 +52,7 @@ class SplashScreenState extends State<SplashScreen> {
       // Trigger login and navigate to home screen
     });
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   Future<void> appUpdateAlert(context) async {
@@ -85,14 +80,6 @@ class SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<void> launchAppStore(String appStoreLink) async {
-    var uri = Uri.parse(appStoreLink);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $appStoreLink';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
