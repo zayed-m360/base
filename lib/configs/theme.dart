@@ -13,6 +13,10 @@ class AppTheme {
       // The color used for primary elements on the screen like buttons, floating action buttons, etc.
       primaryColorLight: AppColors.blue, // Blue
       primaryColorDark: AppColors.primary, // Dark Background
+      cardColor: AppColors.bg,
+      canvasColor: AppColors.bg,
+      dividerColor: AppColors.primary,
+      dialogBackgroundColor: AppColors.bg,
 
       // Background color used in Scaffold, dialogs, etc.
       scaffoldBackgroundColor: AppColors.bg, // Dark Background
@@ -54,7 +58,7 @@ class AppTheme {
         primaryContainer: AppColors.secondary, // Secondary color (Darker Blue)
         secondary: AppColors.blue, // Accent color (Blue)
         secondaryContainer: AppColors.bg, // Scaffold background color (Light Blue)
-        surface: AppColors.primary, // Background color for cards, sheets, etc. (Dark Blue)
+        surface: AppColors.bg, // Background color for cards, sheets, etc. (Dark Blue)
         onPrimary: AppColors.textColorw1, // Text color on primary color (White with 70% opacity)
         onSecondary: AppColors.textColorw2, // Text color on secondary color (White with 60% opacity)
         onSurface: AppColors.textColorb1, // Text color on background (Black with 54% opacity)
