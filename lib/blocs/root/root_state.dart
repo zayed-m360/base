@@ -14,8 +14,4 @@ class NavigateToFlightState extends RootState {}
 
 class NavigateToBookedFlightState extends RootState {}
 
-class ToggleMoreOptionsState extends RootActionState {
-  final bool isVisible;
-
-  ToggleMoreOptionsState(this.isVisible);
-}
+class ToggleMoreOptionsState extends RootActionState {}

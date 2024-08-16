@@ -10,30 +10,7 @@ class BookedFlightScreen extends StatelessWidget {
         title: const Text('Booked Flight Details'),
       ),
       body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-            Text('My Booked Flight Details Screen'),
-          ],
-        ),
+        child: Text('My Booked Flight Details Screen'),
       ),
     );
   }

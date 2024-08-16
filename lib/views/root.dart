@@ -28,7 +28,7 @@ class RootScreen extends StatelessWidget {
       listenWhen: (previous, current) => current is RootActionState,
       buildWhen: (previous, current) => current is! RootActionState,
       listener: (BuildContext context, RootState state) {
-        if (state is ToggleMoreOptionsState && state.isVisible) {
+        if (state is ToggleMoreOptionsState) {
           showDialog(
             barrierColor: Colors.transparent,
             context: context,
@@ -123,7 +123,7 @@ class RootScreen extends StatelessWidget {
                   ),
                   buildNavItem(
                     context,
-                    state is ToggleMoreOptionsState && state.isVisible,
+                    state is ToggleMoreOptionsState,
                     icon: HugeIcons.strokeRoundedMore01,
                     label: "More",
                     onTap: () {

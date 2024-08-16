@@ -5,7 +5,6 @@ part 'root_event.dart';
 part 'root_state.dart';
 
 class RootBloc extends Bloc<RootEvent, RootState> {
-  bool isMoreOptionsVisible = false;
 
   RootBloc() : super(RootInitial()) {
     on<RootInitialEvent>(rootInitialEvent);
@@ -37,8 +36,6 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   }
 
   FutureOr<void> toggleMoreOptionsEvent(ToggleMoreOptionsEvent event, Emitter<RootState> emit) {
-    isMoreOptionsVisible = !isMoreOptionsVisible;
-    print("visibility: $isMoreOptionsVisible");
-    emit(ToggleMoreOptionsState(isMoreOptionsVisible));
+    emit(ToggleMoreOptionsState());
   }
 }
