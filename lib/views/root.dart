@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:ota_b2c/configs/colors.dart';
 import 'package:ota_b2c/views/more/more_options.dart';
 import 'package:ota_b2c/widgets/app_text_style.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../blocs/root/root_bloc.dart';
 import 'booked_flight/booked_flight_screen.dart';
@@ -30,6 +32,7 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // logger.i("height: ${AppSizes.height(context)}\nwidth: ${AppSizes.width(context)}");
     context.read<RootBloc>().add(RootInitialEvent());
     return WillPopScope(
       onWillPop: () async {
@@ -55,14 +58,14 @@ class _RootScreenState extends State<RootScreen> {
               barrierColor: Colors.transparent,
               context: context,
               builder: (context) {
-                return const Stack(
+                return Stack(
                   children: [
                     Positioned(
-                      bottom: 60,
+                      bottom: 60.h,
                       right: 0,
                       child: SizedBox(
-                        width: 100,
-                        child: Dialog(
+                        width: 100.w,
+                        child: const Dialog(
                           shadowColor: Colors.transparent,
                           surfaceTintColor: Colors.transparent,
                           backgroundColor: Colors.transparent,
@@ -93,17 +96,19 @@ class _RootScreenState extends State<RootScreen> {
           }
 
           return Scaffold(
-            body: Stack(
-              children: [
-                body,
-              ],
+            body: UpgradeAlert(
+              child: Stack(
+                children: [
+                  body,
+                ],
+              ),
             ),
             bottomNavigationBar: Container(
               decoration: const BoxDecoration(
                 color: AppColors.primary,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10.r),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -199,7 +204,7 @@ class _RootScreenState extends State<RootScreen> {
         children: [
           HugeIcon(
             icon: icon,
-            size: isActive ? 25 : 20,
+            size: isActive ? 25.r : 20.r,
             color: isActive ? Colors.white : Colors.white70,
           ),
           Text(

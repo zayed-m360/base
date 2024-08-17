@@ -1,40 +1,23 @@
-/*
-appAlertDialog
-@Author Soton Ahmed <soton.m360ict@gmail.com>
-Start Date: 12-12-2023
-Last Update: 12-12-2023
-*/
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
+import 'package:ota_b2c/widgets/app_text_style.dart';
 
-import '../configs/app_sizes.dart';
 import '../configs/colors.dart';
 
 Future<void> appAlertDialog(
     BuildContext context,
-    String content, {
+    {
       List<Widget> actions = const <Widget>[],
       bool barrierDismissible = false,
       String? title,
-      Color color = AppColors.seed,
-      IconData icon = Icons.warning
+      Color color = AppColors.bg,
+      required Widget content
     }) async {
   final alert = AlertDialog(
     titlePadding: EdgeInsets.zero,
-    title: Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(27))
-      ),
-        padding: const EdgeInsets.all(AppSizes.bodyPadding),
-        child: Row(
-          children: [
-            Icon(icon, color: AppColors.bg,),
-            const SizedBox(width: 10,),
-            Text(title??"Notice",style: const TextStyle(color: AppColors.bg),),
-          ],
-        )),
-    content: content.isEmpty ? null : Text(content),
+    title: Text(title??"",style: myText(color: AppColors.textColorb1),),
+    content: content,
     actions: actions,
   );
 
@@ -44,5 +27,30 @@ Future<void> appAlertDialog(
     builder: (BuildContext context) {
       return alert;
     },
+  );
+}
+
+Future<void> appLoadingDialog(BuildContext context) {
+  return appAlertDialog(
+    context,
+    content: SizedBox(
+      height: 200.h,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 150.h,
+            width: 150.w,  // Added width constraint
+            child: Lottie.asset('assets/animations/loading.json'),
+          ),
+          Text(
+            "Loading.....",
+            style: myText(
+              color: AppColors.textColorb1,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }

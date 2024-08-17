@@ -1,12 +1,17 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:in_app_update/in_app_update.dart';
-
-import '../../configs/app_constants.dart';
-import '../../configs/app_sizes.dart';
-import '../../configs/app_urls.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ota_b2c/blocs/auth/auth_bloc.dart';
+import 'package:ota_b2c/configs/app_routes.dart';
+import 'package:ota_b2c/configs/app_sizes.dart';
+import 'package:ota_b2c/views/root.dart';
+import 'package:ota_b2c/views/splash/widgets/button.dart';
+import 'package:ota_b2c/views/splash/widgets/page_indicator.dart';
+import 'package:ota_b2c/widgets/app_alert_dialog.dart';
+import 'package:ota_b2c/widgets/app_text_style.dart';
+import '../../blocs/splash/splash_bloc.dart';
 import '../../configs/colors.dart';
-import '../../database/login.dart';
+import 'widgets/login_form.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,95 +21,133 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
-  String? token, email, password;
-  AppUpdateInfo? _updateInfo;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late AuthBloc previousLoginBloc;
 
-  Future<AppUpdateInfo?> checkForUpdate() async {
-    try {
-      AppUpdateInfo info = await InAppUpdate.checkForUpdate();
-      if (!mounted) return null; // Ensure the widget is still mounted
-      setState(() {
-        _updateInfo = info;
-      });
-      if (_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
-        appUpdateAlert(context);
-      }
-    } catch (e) {
-      debugPrint('$e');
-    }
-    return _updateInfo;
+  @override
+  void initState() {
+    previousLoginBloc = BlocProvider.of<AuthBloc>(context);
+    previousLoginBloc.add(InitialFetchLoginDataEvent());
+    super.initState();
   }
 
-  Future<void> getData() async {
-    await LocalDB.getLoginInfo().then((myData) {
-      if (!mounted) return; // Ensure the widget is still mounted
-      if (myData == null) {
-        Future.delayed(const Duration(milliseconds: 5), () {
-          // Navigate to your next screen
-        });
-        return;
-      }
-
-      AppUrls.logger.f("message myData: ${myData.length}");
-      email = myData[0];
-      password = myData[1];
-      token = myData[2];
-      // Trigger login and navigate to home screen
-    });
-
-    if (mounted) setState(() {});
-  }
-
-  Future<void> appUpdateAlert(context) async {
-    final alert = AlertDialog.adaptive(
-      title: const Text("Update App?"),
-      content: const Text("A new version of ${AppConstants.appName} is available!"),
-      actions: [
-        TextButton(
-            onPressed: () {
-              getData();
-            },
-            child: const Text("Later")),
-        TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              InAppUpdate.performImmediateUpdate();
-            },
-            child: const Text("Update Now")),
-      ],
-    );
-    showAdaptiveDialog(context: context,
-      builder: (context) {
-        return alert;
-      },
-    );
-  }
-
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(AppSizes.bodyPadding),
-        child: Text.rich(
-          TextSpan(
-            text: 'Product of ',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.red,
+    return BlocListener<AuthBloc, AuthState>(
+      // listenWhen: (previous, current) => current is PreviousLoginActionState,
+      listener: (context, state) {
+        if(state is LoginSuccessState){
+          AppRoutes.pushAndRemoveUntil(context, const RootScreen());
+        } else if(state is AuthLoadingState){
+          appLoadingDialog(context);
+        } else if(state is ErrorState){
+          AppRoutes.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Something went wrong", style: myText(color: AppColors.textColorw1),),
+            duration: const Duration(seconds: 1),
+          ));
+        }
+      },
+      child: Scaffold(
+        body: Container(
+          padding: EdgeInsets.fromLTRB(10.r, 0.r, 10.r, 10.r),
+          width: double.maxFinite,
+          height: AppSizes.height(context),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              stops: [0.7, 1],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [AppColors.primary, Color.fromARGB(255, 6, 23, 43)],
             ),
-            children: [
-              TextSpan(
-                text: "M360 ICT",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                  color: AppColors.seed,
-                ),
-              ),
-            ],
           ),
-          textAlign: TextAlign.center,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Image and text
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 25.w,
+                        ),
+                        Image.asset(
+                          'assets/images/plane_bg.png',
+                          height: 350.h,
+                        ),
+                      ],
+                    ),
+                    BlocBuilder<SplashBloc, SplashState>(
+                      builder: (context, state) {
+                        if (state is ShowLoginFormState) {
+                          return LoginForm(
+                            emailController: emailController,
+                            passwordController: passwordController,
+                            formKey: _formKey,
+                          );
+                        }
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: 50.h,
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                style: myText(
+                                  color: AppColors.textColorw1,
+                                  fontSize: 40.sp,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                children: const <TextSpan>[
+                                  TextSpan(text: 'Easiest way to\n'),
+                                  TextSpan(
+                                    text: 'Book ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  TextSpan(text: 'your flight'),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 200.h,
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is NoPreviousDataState || state is ErrorState || state is AuthLoadingState) {
+                      
+                      return Column(
+                        children: [
+                          Button(
+                            formKey: _formKey, emailController: emailController, passwordController: passwordController,
+                          ),
+                          SizedBox(height: 20.h),
+                          const PageIndicator()
+                        ],
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

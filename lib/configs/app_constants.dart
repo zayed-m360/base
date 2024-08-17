@@ -1,3 +1,5 @@
+import 'package:logger/web.dart';
+
 class AppConstants {
   static const String appName             = 'OTA B2C';
   static const String oneWay              = 'One Way';
@@ -24,8 +26,6 @@ class AppConstants {
 
   static const String resetUser = "reset_user";
   static const String verifyUser = "verify_user";
-
-  static final RegExp emailRegex = RegExp(
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.([a-zA-Z]{2,})+",
-  );
+  static final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 }
+Logger logger = Logger();
