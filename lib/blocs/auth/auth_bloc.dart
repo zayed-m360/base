@@ -18,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(PreviousLoginInitial()) {
     on<InitialFetchLoginDataEvent>(initialFetchLoginDataEvent);
     on<LoginEvent>(loginEvent);
+    on<LogoutEvent>(logoutEvent);
   }
 
   FutureOr<void> initialFetchLoginDataEvent(InitialFetchLoginDataEvent event, Emitter<AuthState> emit) async {
@@ -68,6 +69,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(LoginSuccessState());
     }else{
       emit(AuthErrorState(errorMessage: "Login failed"));
+    }
+  }
+
+  FutureOr<void> logoutEvent(LogoutEvent event, Emitter<AuthState> emit) {
+    try {
+      LocalDB.delLoginInfo();
+      emit(LogoutSuccessState());
+    } catch (e) {
+      emit(LogoutFailedState());
     }
   }
 }

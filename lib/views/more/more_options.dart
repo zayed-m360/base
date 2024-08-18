@@ -1,9 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:ota_b2c/configs/app_routes.dart';
+import 'package:ota_b2c/views/splash/splash_screen.dart';
+
+import '../../blocs/auth/auth_bloc.dart';
 
 class MoreOptions extends StatelessWidget {
-
   const MoreOptions({super.key});
 
   @override
@@ -26,8 +32,7 @@ class MoreOptions extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   child: const Text(
                     "Option 1",
                     style: TextStyle(fontSize: 16),
@@ -35,21 +40,36 @@ class MoreOptions extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   child: const Text(
                     "Option 2",
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
                 const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () {
+                BlocListener<AuthBloc, AuthState>(
+                  listenWhen: (previous, current) => current is AuthActionState,
+                  listener: (context, state) {
+                    if(state is LogoutSuccessState){
+                      AppRoutes.pop(context);//to pop the options
+                      AppRoutes.pushReplacement(context, const SplashScreen());
+                    }if(state is LogoutFailedState){
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                           content: Text("Something went wrong"),
+                           duration: Duration(seconds: 1),
+                      ));
+                    }
                   },
-                  child: const Text(
-                    "Option 3",
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  child: GestureDetector(
+                      onTap: () {
+                        context.read<AuthBloc>().add(LogoutEvent());
+                        // AppRoutes.pop(context);
+                      },
+                      child: HugeIcon(
+                        icon: HugeIcons.strokeRoundedLogout03,
+                        color: Colors.black,
+                        size: 24.0.r,
+                      )),
                 ),
               ],
             ),
