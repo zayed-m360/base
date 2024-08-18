@@ -43,12 +43,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if(loginModel?.success == true) {
           emit(LoginSuccessState());
         }else{
-          emit(ErrorState(errorMessage: "Login failed"));
+          emit(PreviousAuthErrorState(errorMessage: "Login failed"));
         }
       }
     } catch (e) {
       logger.e("Error during fetch login data: $e");
-      emit(ErrorState(errorMessage: e.toString()));
+      emit(PreviousAuthErrorState(errorMessage: e.toString()));
     }
   }
 
@@ -67,7 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LocalDB.postLoginInfo(email: event.email, password: event.password, token: loginModel?.token??"");
       emit(LoginSuccessState());
     }else{
-      emit(ErrorState(errorMessage: "Login failed"));
+      emit(AuthErrorState(errorMessage: "Login failed"));
     }
   }
 }

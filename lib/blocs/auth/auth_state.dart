@@ -11,8 +11,13 @@ final class NoPreviousDataState extends AuthState {}
 
 final class LoginSuccessState extends AuthActionState {}
 final class AuthLoadingState extends AuthActionState {}
-final class ErrorState extends AuthActionState {
+final class AuthErrorState extends AuthActionState {
   final String errorMessage;
 
-  ErrorState({required this.errorMessage });
+  AuthErrorState({required this.errorMessage });
+}
+final class PreviousAuthErrorState extends AuthActionState {
+  final String errorMessage;
+
+  PreviousAuthErrorState({required this.errorMessage });
 }

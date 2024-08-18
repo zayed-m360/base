@@ -43,12 +43,18 @@ class SplashScreenState extends State<SplashScreen> {
           AppRoutes.pushAndRemoveUntil(context, const RootScreen());
         } else if(state is AuthLoadingState){
           appLoadingDialog(context);
-        } else if(state is ErrorState){
+        } else if(state is AuthErrorState){
           AppRoutes.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("Something went wrong", style: myText(color: AppColors.textColorw1),),
             duration: const Duration(seconds: 1),
           ));
+        } else if(state is PreviousAuthErrorState){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Something went wrong", style: myText(color: AppColors.textColorw1),),
+            duration: const Duration(seconds: 1),
+          ));
+          AppRoutes.pushAndRemoveUntil(context, const RootScreen());
         }
       },
       child: Scaffold(
@@ -129,7 +135,7 @@ class SplashScreenState extends State<SplashScreen> {
                 ),
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
-                    if (state is NoPreviousDataState || state is ErrorState || state is AuthLoadingState) {
+                    if (state is NoPreviousDataState || state is AuthErrorState || state is AuthLoadingState) {
                       
                       return Column(
                         children: [
