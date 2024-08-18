@@ -24,6 +24,7 @@ class AppTextField extends StatelessWidget {
       this.validator,
       this.obscureText,
       this.suffixIcon,
+      this.prefixIcon,
       this.onEditingComplete,
       this.autofocus,
       this.focusNode,
@@ -42,6 +43,7 @@ class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool? obscureText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final String labelText;
   final String hintText;
   final bool? autofocus;
@@ -90,7 +92,9 @@ class AppTextField extends StatelessWidget {
           readOnly: readOnly,
           cursorColor: textColor ?? AppColors.textColorb1,
           style: myText(color: textColor??AppColors.textColorb1),
+          textAlignVertical: TextAlignVertical.center,
           decoration: InputDecoration(
+            prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
             // labelText: labelText,
             hintText: hintText,

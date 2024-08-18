@@ -10,6 +10,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc() : super(SplashInitial()) {
     on<ShowLoginFormEvent>(showLoginFormEvent);
     on<ShowEmailFormEvent>(showEmailFormEvent);
+    on<ShowSignupFormEvent>(showSignupFormEvent);
   }
 
   FutureOr<void> showLoginFormEvent(ShowLoginFormEvent event, Emitter<SplashState> emit) {
@@ -18,5 +19,9 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
   FutureOr<void> showEmailFormEvent(ShowEmailFormEvent event, Emitter<SplashState> emit) {
     emit(ShowSentOTPFormState());
+  }
+
+  FutureOr<void> showSignupFormEvent(ShowSignupFormEvent event, Emitter<SplashState> emit) {
+    emit(ShowSignupFormState());
   }
 }

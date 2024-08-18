@@ -14,12 +14,14 @@ class Button extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController newPasswordController;
+  final TextEditingController nameController;
+  final TextEditingController phoneController;
 
   const Button({
     super.key,
     required this.formKey,
     required this.emailController,
-    required this.passwordController, required this.newPasswordController, // Add this line
+    required this.passwordController, required this.newPasswordController, required this.nameController, required this.phoneController, // Add this line
   });
 
   @override
@@ -89,7 +91,9 @@ class Button extends StatelessWidget {
                         ),
                         SizedBox(height: 5.h),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.read<SplashBloc>().add(ShowSignupFormEvent());
+                          },
                           child: RichText(
                             text: TextSpan(
                               style: myText(
@@ -108,6 +112,21 @@ class Button extends StatelessWidget {
                           ),
                         )
                       ],
+                    );
+                  } else if (splashState is ShowSignupFormState) {
+                    return AppButton(
+                      width: 400.w,
+                      text: "Sign Up",
+                      press: () {
+                        if (formKey.currentState!.validate()) {
+                          context.read<AuthBloc>().add(SignupEvent(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(), 
+                                  phone: phoneController.text.trim(),
+                                  name: nameController.text.trim()));
+                        }
+                      },
+                      color: AppColors.blue,
                     );
                   } else if (splashState is ShowSentOTPFormState) {
                     return AppButton(

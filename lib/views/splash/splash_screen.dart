@@ -10,6 +10,7 @@ import 'package:ota_b2c/views/splash/widgets/button.dart';
 import 'package:ota_b2c/views/splash/widgets/new_password_form.dart';
 import 'package:ota_b2c/views/splash/widgets/send_otp_form.dart';
 import 'package:ota_b2c/views/splash/widgets/page_indicator.dart';
+import 'package:ota_b2c/views/splash/widgets/signup_form.dart';
 import 'package:ota_b2c/views/splash/widgets/verify_otp_form.dart';
 import 'package:ota_b2c/widgets/app_alert_dialog.dart';
 import 'package:ota_b2c/widgets/app_text_style.dart';
@@ -35,6 +36,8 @@ class SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
@@ -165,6 +168,14 @@ class SplashScreenState extends State<SplashScreen> {
                                   passwordController: passwordController,
                                   formKey: _formKey,
                                 );
+                              } else if (spalshState is ShowSignupFormState) {
+                                return SignupForm(
+                                  emailController: emailController,
+                                  passwordController: passwordController,
+                                  formKey: _formKey, 
+                                  nameController: nameController, 
+                                  phoneController: phoneController,
+                                );
                               } else if (spalshState is ShowSentOTPFormState) {
                                 return SendOtpForm(
                                     emailController: emailController,
@@ -217,7 +228,10 @@ class SplashScreenState extends State<SplashScreen> {
                           Button(
                             formKey: _formKey,
                             emailController: emailController,
-                            passwordController: passwordController, newPasswordController: newPasswordController,
+                            passwordController: passwordController, 
+                            newPasswordController: newPasswordController,
+                            nameController: nameController,
+                            phoneController: phoneController,
                           ),
                           SizedBox(height: 20.h),
                           const PageIndicator()

@@ -26,10 +26,10 @@ class PageIndicator extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AnimatedContainer(
-                  width: state is ShowLoginFormState || state is ShowSentOTPFormState ? 10.h : 30.w,
+                  width: state is ShowLoginFormState || state is ShowSentOTPFormState || state is ShowSignupFormState ? 10.h : 30.w,
                   height: 10.h,
                   decoration: BoxDecoration(
-                    color: state is ShowLoginFormState || state is ShowSentOTPFormState
+                    color: state is ShowLoginFormState || state is ShowSentOTPFormState || state is ShowSignupFormState
                         ? AppColors.bg
                         : AppColors.blue,
                     borderRadius: BorderRadius.circular(30),
@@ -41,10 +41,10 @@ class PageIndicator extends StatelessWidget {
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  width: state is! ShowLoginFormState ? 10.h : 30.w,
+                  width: state is! ShowLoginFormState && state is! ShowSignupFormState ? 10.h : 30.w,
                   height: 10.h,
                   decoration: BoxDecoration(
-                    color: state is! ShowLoginFormState
+                    color: state is! ShowLoginFormState && state is! ShowSignupFormState
                         ? AppColors.bg
                         : AppColors.blue,
                     borderRadius: BorderRadius.circular(30),

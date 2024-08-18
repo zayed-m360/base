@@ -13,11 +13,12 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  String? email, password, token;
+  String? email, password, token, name, phone;
   LoginModel? loginModel;
   AuthBloc() : super(PreviousLoginInitial()) {
     on<InitialFetchLoginDataEvent>(initialFetchLoginDataEvent);
     on<LoginEvent>(loginEvent);
+    on<SignupEvent>(signupEvent);
     on<LogoutEvent>(logoutEvent);
   }
 
@@ -60,6 +61,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       "password": event.password
     };
     final loginResponse = await postResponse(url: AppUrls.login, payload: payload);
+    loginModel = loginModelFromJson(loginResponse);
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    if(loginModel?.success == true) {
+      LocalDB.postLoginInfo(email: event.email, password: event.password, token: loginModel?.token??"");
+      emit(LoginSuccessState());
+    }else{
+      emit(AuthErrorState(errorMessage: loginModel?.message??""));
+    }
+  }
+  FutureOr<void> signupEvent(SignupEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoadingState());
+    Map<String, String> payload = {
+      "name": event.name,
+      "email": event.email,
+      "password": event.password,
+      "mobile_number": '+880${event.phone}',
+    };
+    final loginResponse = await postResponse(url: AppUrls.signUp, payload: payload);
     loginModel = loginModelFromJson(loginResponse);
 
     await Future.delayed(const Duration(seconds: 1));
