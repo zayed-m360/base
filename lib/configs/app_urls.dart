@@ -13,7 +13,9 @@ class AppUrls {
   static const String login          = '$baseUrl/btoc/auth/login';
   static const String editProfile    = '$baseUrl/booking/profile';
   static const String signUp         = '$baseUrl/auth/user/registration';
-  static const String resetPassword  = '$baseUrl/auth/user/forget-password';
+  static const String sendOTP        = '$baseUrl/btoc/otp/send';
+  static const String verifyOTP       = '$baseUrl/btoc/otp/match';
+  static const String resetPassword  = '$baseUrl/btoc/auth/reset-password';
   static const String changePassword = '$baseUrl/booking/profile/change-password';
   static const String bookingRequest = '$baseUrl/booking/booking-request';
 
@@ -22,8 +24,8 @@ class AppUrls {
 
   //!for common
   static const String airports = '$baseUrl/common/airport';
-  static const String sendOtp  = '$baseUrl/common/send-email-otp';
-  static const String matchOtp = '$baseUrl/common/match-email-otp';
+  // static const String sendOtp  = '$baseUrl/common/send-email-otp';
+  // static const String matchOtp = '$baseUrl/common/match-email-otp';
   static const String country  = '$baseUrl/common/country';
   static const String city     = '$baseUrl/common/city?country_id=';
 

@@ -3,22 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:ota_b2c/blocs/splash/splash_bloc.dart';
-import 'package:ota_b2c/configs/app_constants.dart';
 import 'package:ota_b2c/widgets/app_text_style.dart';
 
 import '../../../blocs/password/password_bloc.dart';
 import '../../../configs/colors.dart';
 import '../../../widgets/app_text_field.dart';
 
-class LoginForm extends StatelessWidget {
-  const LoginForm({
+class NewPasswordForm extends StatelessWidget {
+  const NewPasswordForm({
     super.key,
-    required this.emailController,
-    required this.passwordController, required this.formKey,
+    required this.newPasswordController, required this.formKey,
   });
 
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
+  final TextEditingController newPasswordController;
   final GlobalKey<FormState> formKey;
 
   @override
@@ -27,39 +24,17 @@ class LoginForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          AppTextField(
-            textInputAction: TextInputAction.next,
-            labelText: "Email",
-            hintText: "Enter your Email",
-            keyboardType: TextInputType.emailAddress,
-            controller: emailController,
-            labelColor: AppColors.textColorw1,
-            hintColor: AppColors.textColorw3,
-            fillColor: AppColors.bg.withOpacity(0.1),
-            textColor: AppColors.textColorw1,
-            isRequired: true,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return "Please enter an email address";
-              } else if (!AppConstants.emailRegex.hasMatch(value)) {
-                return "Please enter a valid email address";
-              }
-              return null; // No errors found
-            },
-          ),
-          SizedBox(
-            height: 20.h,
-          ),
+
           BlocBuilder<PasswordBloc, PasswordState>(
             builder: (context, state) {
               final bloc = BlocProvider.of<PasswordBloc>(context);
               return AppTextField(
                 obscureText: !bloc.passwordVisible,
                 textInputAction: TextInputAction.done,
-                labelText: "Password",
-                hintText: "Enter your password",
+                labelText: "New Password",
+                hintText: "Enter your new password",
                 keyboardType: TextInputType.emailAddress,
-                controller: passwordController,
+                controller: newPasswordController,
                 labelColor: AppColors.textColorw1,
                 hintColor: AppColors.textColorw3,
                 fillColor: AppColors.bg.withOpacity(0.1),
@@ -94,8 +69,8 @@ class LoginForm extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: (){
-                  context.read<SplashBloc>().add(ShowEmailFormEvent());
-              }, child: Text("Forgot Password", style: myText(color: AppColors.textColorw1),))
+                  context.read<SplashBloc>().add(ShowLoginFormEvent());
+              }, child: Text("Go to Login", style: myText(color: AppColors.textColorw1),))
             ],
           ),
           SizedBox(

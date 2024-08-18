@@ -68,7 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LocalDB.postLoginInfo(email: event.email, password: event.password, token: loginModel?.token??"");
       emit(LoginSuccessState());
     }else{
-      emit(AuthErrorState(errorMessage: "Login failed"));
+      emit(AuthErrorState(errorMessage: loginModel?.message??""));
     }
   }
 

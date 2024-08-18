@@ -16,6 +16,7 @@ class PageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SplashBloc, SplashState>(
+      buildWhen: (previous, current) => current is! ShowSentOTPFormState,
       builder: (context, state) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -25,10 +26,10 @@ class PageIndicator extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AnimatedContainer(
-                  width: state is ShowLoginFormState ? 10.h : 30.w,
+                  width: state is ShowLoginFormState || state is ShowSentOTPFormState ? 10.h : 30.w,
                   height: 10.h,
                   decoration: BoxDecoration(
-                    color: state is ShowLoginFormState
+                    color: state is ShowLoginFormState || state is ShowSentOTPFormState
                         ? AppColors.bg
                         : AppColors.blue,
                     borderRadius: BorderRadius.circular(30),

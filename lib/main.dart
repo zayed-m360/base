@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
+import 'package:ota_b2c/blocs/otp/otp_bloc.dart';
 import 'package:ota_b2c/blocs/password/password_bloc.dart';
 import 'package:ota_b2c/blocs/splash/splash_bloc.dart';
+import 'package:ota_b2c/blocs/timer/timer_bloc.dart';
 import 'package:ota_b2c/configs/app_constants.dart';
 import 'package:ota_b2c/views/splash/splash_screen.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,6 +44,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context)=>SplashBloc()),
         BlocProvider(create: (context)=>PasswordBloc()),
         BlocProvider(create: (context)=>AuthBloc()),
+        BlocProvider(create: (context)=>OtpBloc()),
+        BlocProvider(create: (context)=>TimerBloc()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(411, 867),
